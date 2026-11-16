@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Un regalo para ti</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      color: #fff;
+      font-family: Georgia, "Times New Roman", serif;
+      background:
+        linear-gradient(rgba(12, 10, 18, 0.38), rgba(12, 10, 18, 0.5)),
+        url("assets/ymnk.gif") center / cover fixed;
+    }
+
+    main {
+      width: min(100%, 1200px);
+      margin: auto;
+      text-align: center;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    h1 {
+      margin: 0 0 28px;
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 400;
+    }
+
+    .opciones {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .opcion {
+      width: min(220px, 50%);
+      padding: 18px;
+      border: 0;
+      border-radius: 18px;
+      color: #211d25;
+      background: #f4f0e8;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .opcion img {
+      display: block;
+      width: 100%;
+      height: 170px;
+      object-fit: contain;
+      image-rendering: pixelated;
+    }
+
+    .opcion p {
+      margin: 12px 0 0;
+      font-size: 1.35rem;
+    }
+
+    .respuesta-no {
+      display: grid;
+      width: min(100%, 340px);
+      margin: 0 auto;
+      padding: 20px;
+      justify-items: center;
+      gap: 18px;
+      border-radius: 18px;
+      color: #211d25;
+      background: #f4f0e8;
+    }
+
+    .imagen-porfi {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1;
+      border-radius: 12px;
+      object-fit: cover;
+    }
+
+    .respuesta-no p {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+
+    .boton-esta-bien {
+      padding: 12px 28px;
+      border: 0;
+      border-radius: 999px;
+      color: #211d25;
+      background: #e5d8c8;
+      font: inherit;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 480px) {
+      .opciones {
+        gap: 12px;
+      }
+
+      .opcion {
+        padding: 12px 8px;
+      }
+
+      .opcion img {
+        height: 140px;
+      }
+    }
+
+    .sobre-cerrado {
+      position: relative;
+      display: block;
+      width: min(100%, 380px);
+      min-height: 210px;
+      margin: 0 auto;
+      padding: 128px 24px 24px;
+      overflow: hidden;
+      border: 0;
+      border-radius: 16px;
+      color: #211d25;
+      background: #f4f0e8;
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.28);
+      font: inherit;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .sobre-cerrado::before {
+      position: absolute;
+      inset: 0 0 auto;
+      height: 62%;
+      background: #e5d8c8;
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      content: "";
+    }
+
+    .sobre-cerrado span {
+      position: relative;
+    }
+
+    .escena-carta {
+      display: grid;
+      grid-template-columns: minmax(120px, 1fr) minmax(420px, 4fr) minmax(120px, 1fr);
+      grid-template-areas:
+        "arriba-izquierda arriba-centro arriba-derecha"
+        "izquierda carta derecha"
+        "abajo-izquierda . abajo-derecha";
+      align-items: center;
+      gap: 16px;
+      margin: 0 auto;
+    }
+
+    .carta-papel {
+      padding: clamp(24px, 5vw, 48px);
+      border-radius: 18px;
+      color: #302832;
+      background: #fffaf0;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+      text-align: left;
+    }
+
+    .carta-papel h2 {
+      margin: 0 0 28px;
+      font-size: clamp(1.7rem, 4vw, 2.3rem);
+      font-weight: 400;
+      text-align: center;
+    }
+
+    .texto-carta {
+      max-width: 680px;
+      margin: 0 auto 32px;
+      font-size: 1.1rem;
+      line-height: 1.8;
+    }
+
+    .imagen-carta {
+      display: grid;
+      margin: 0;
+      place-items: center;
+    }
+
+    .imagen-carta img {
+      display: block;
+      width: 100%;
+      height: 160px;
+      object-fit: contain;
+      filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.28));
+    }
+
+    .arriba-izquierda {
+      grid-area: arriba-izquierda;
+    }
+
+    .arriba-centro {
+      grid-area: arriba-centro;
+    }
+
+    .arriba-derecha {
+      grid-area: arriba-derecha;
+    }
+
+    .izquierda {
+      grid-area: izquierda;
+    }
+
+    .carta-papel {
+      grid-area: carta;
+    }
+
+    .derecha {
+      grid-area: derecha;
+    }
+
+    .abajo-izquierda {
+      grid-area: abajo-izquierda;
+    }
+
+    .abajo-derecha {
+      grid-area: abajo-derecha;
+    }
+
+    .navegacion {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin: 24px auto 0;
+    }
+
+    .boton-siguiente,
+    .boton-anterior {
+      padding: 14px 30px;
+      border: 0;
+      border-radius: 999px;
+      color: #211d25;
+      background: #f4f0e8;
+      font: inherit;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    body.reproductor-activo {
+      padding-bottom: 196px;
+    }
+
+    .spotify-player {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      z-index: 10;
+      width: min(420px, calc(100vw - 24px));
+      padding: 6px;
+      border-radius: 14px;
+      background: #121212;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+      transform: translateX(-50%);
+    }
+
+    .spotify-player iframe {
+      display: block;
+      width: 100%;
+      height: 152px;
+      border: 0;
+      border-radius: 10px;
+    }
+
+    .enlace-spotify {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 12px 20px;
+      border-radius: 999px;
+      color: #101010;
+      background: #1ed760;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .poemas {
+      display: grid;
+      width: min(100%, 900px);
+      margin: 0 auto;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+    }
+
+    .poema {
+      padding: 24px;
+      border-radius: 18px;
+      color: #302832;
+      background: #fffaf0;
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+      text-align: left;
+    }
+
+    .poema h2 {
+      margin: 0 0 16px;
+      font-size: 1.5rem;
+      font-weight: 400;
+      text-align: center;
+    }
+
+    .poema p {
+      margin: 0;
+      line-height: 1.75;
+    }
+
+    .poema p + p {
+      margin-top: 1.15em;
+    }
+
+    .acceso-poema {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 11;
+      width: 82px;
+      height: 82px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .acceso-poema img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.7));
+    }
+
+    .pagina-poema {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: grid;
+      width: 100%;
+      height: 100vh;
+      padding: 24px;
+      place-items: center;
+      color: #fff;
+      background: #000;
+      text-align: center;
+    }
+
+    .pagina-poema .navegacion {
+      position: absolute;
+      bottom: 24px;
+      left: 24px;
+      margin: 0;
+    }
+
+    .contenido-poema-final {
+      width: min(100%, 880px);
+      max-height: calc(100vh - 160px);
+      overflow-y: auto;
+    }
+
+    .contenido-poema-final p {
+      margin: 0;
+      line-height: 1.75;
+      text-align: left;
+    }
+
+    .contenido-poema-final p + p {
+      margin-top: 1.1em;
+    }
+
+    @media (max-width: 600px) {
+      .acceso-poema {
+        bottom: 190px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .escena-carta {
+        grid-template-columns: minmax(80px, 1fr) minmax(320px, 4fr) minmax(80px, 1fr);
+        gap: 10px;
+      }
+
+      .imagen-carta img {
+        height: 130px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .escena-carta {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-areas:
+          "arriba-izquierda arriba-centro"
+          "arriba-derecha izquierda"
+          "carta carta"
+          "derecha abajo-izquierda"
+          "abajo-derecha .";
+        gap: 8px;
+      }
+
+      .imagen-carta img {
+        height: 120px;
+      }
+
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section id="inicio" aria-labelledby="pregunta">
+      <h1 id="pregunta">¿aceptas este regalo?</h1>
+      <div class="opciones" aria-label="Opciones">
+        <button class="opcion" id="rechazar-regalo" type="button">
+          <img src="assets/shadow.gif" alt="Shadow">
+          <p>No</p>
+        </button>
+        <button class="opcion" id="aceptar-regalo" type="button">
+          <img src="assets/panda.gif" alt="Panda">
+          <p>Sí</p>
+        </button>
+      </div>
+    </section>
+
+    <section id="respuesta-no" hidden aria-label="Respuesta a la opción no">
+      <div class="respuesta-no">
+        <img class="imagen-porfi" src="assets/porfi.jpg" alt="Un hámster con expresión suplicante">
+        <p>po que no :c</p>
+        <button class="boton-esta-bien" id="aceptar-no" type="button">Está bien</button>
+      </div>
+    </section>
+
+    <section id="carta-cerrada" hidden aria-labelledby="mensaje-cerrado">
+      <h1 id="mensaje-cerrado">Preparé algo para ti</h1>
+      <button class="sobre-cerrado" id="abrir-carta" type="button">
+        <span>Abrir tu carta</span>
+      </button>
+      <div class="navegacion">
+        <button class="boton-anterior" id="anterior-inicio" type="button">Anterior</button>
+      </div>
+    </section>
+
+    <section class="escena-carta" id="carta-abierta" hidden tabindex="-1" aria-label="Carta abierta y sus imágenes">
+      <figure class="imagen-carta arriba-izquierda">
+        <img src="assets/carta.png" alt="Ilustración de una persona abrazando a un panda">
+      </figure>
+      <figure class="imagen-carta arriba-centro">
+        <img src="assets/carta2.png" alt="Ilustración de una criatura fantástica">
+      </figure>
+      <figure class="imagen-carta arriba-derecha">
+        <img src="assets/carta3.png" alt="Personaje de videojuego en pose de acción">
+      </figure>
+      <figure class="imagen-carta izquierda">
+        <img src="assets/carta4.png" alt="Personaje robusto de videojuego">
+      </figure>
+      <article class="carta-papel">
+        <h2 id="titulo-carta" tabindex="-1">Una carta para ti</h2>
+        <div class="texto-carta">
+          <p>Mi amor:</p>
+          <p>No soy de abrir mis sentimientos tanto, pero en este caso haré una enorme excepción contigo. Realmente eres una persona súper agradable que me hace sentir cosas que hacía mucho tiempo no sentía y que, quiera o no, son lo mejor que he sentido hasta ahora. Me alegra tenerte a mi lado y quiero que sepas que estos últimos meses he sentido realmente que estoy en el cielo, porque me pone feliz escuchar tu voz todos los días. También me hace feliz besarte tanto, tanto, que siento que recupero la vida cuando lo hago. Te amo y espero que podamos seguir mucho tiempo más, hasta que las estrellas exploten y solo quedemos nosotros.</p>
+          <p>Con cariño,<br>Oscar :3</p>
+        </div>
+      </article>
+      <figure class="imagen-carta derecha">
+        <img src="assets/carta5.jpg" alt="Ilustración de un personaje enmascarado">
+      </figure>
+      <figure class="imagen-carta abajo-izquierda">
+        <img src="assets/carta6.png" alt="Personaje dibujado sosteniendo una motosierra">
+      </figure>
+      <figure class="imagen-carta abajo-derecha">
+        <img src="assets/carta7.png" alt="Personaje de caricatura sosteniendo una espada">
+      </figure>
+    </section>
+    <div class="navegacion" id="navegacion-carta" hidden>
+      <button class="boton-anterior" id="anterior-carta" type="button">Anterior</button>
+      <button class="boton-siguiente" id="siguiente-playlist" type="button">Siguiente</button>
+    </div>
+
+    <section id="playlist" hidden aria-labelledby="titulo-playlist">
+      <h1 id="titulo-playlist" tabindex="-1">Te dedico todo esto</h1>
+      <p>Escúchala aquí o ábrela directamente en Spotify.</p>
+      <a
+        class="enlace-spotify"
+        href="https://open.spotify.com/playlist/1sDUWFGw5691GWm8qfuIn9?si=f4bf511ed6084722"
+        target="_blank"
+        rel="noopener noreferrer"
+      >Abrir en Spotify</a>
+      <div class="navegacion">
+        <button class="boton-anterior" id="anterior-playlist" type="button">Anterior</button>
+        <button class="boton-siguiente" id="siguiente-poemas" type="button">Siguiente</button>
+      </div>
+    </section>
+
+    <section id="poemas" hidden aria-labelledby="titulo-poemas">
+      <h1 id="titulo-poemas" tabindex="-1">Dos poemas para ti</h1>
+      <div class="poemas">
+        <article class="poema">
+          <h2>El destello en la penumbra</h2>
+          <p>En este reino de sombras donde habita mi mente,<br>
+            donde la noche es eterna y el silencio es mi ley,<br>
+            apareciste tú, como un espectro inocente,<br>
+            con un rastro de abismo en tu mechón azul rey.</p>
+          <p>Tu piel, tan pálida como el beso de la luna,<br>
+            ilumina los rincones donde nadie quiso entrar;<br>
+            eres la calma extraña de una noche oportuna,<br>
+            el único misterio que no quiero descifrar.</p>
+          <p>Ese azul en tu cabello es un fuego que no quema,<br>
+            un fragmento del cosmos perdido en tu mirar,<br>
+            la tinta más profunda de mi mejor poema,<br>
+            el faro en la tormenta que me enseña a respirar.</p>
+          <p>No necesito el sol ni la luz de un falso día,<br>
+            si tengo el frío dulce de tu piel junto a la mía;<br>
+            pues en mi oscuridad, donde todo se deshace,<br>
+            tu presencia es el milagro donde mi alma renace.</p>
+        </article>
+        <article class="poema">
+          <h2>Devoción Más Allá del Cosmos</h2>
+          <p>Quizás desde el abismo más hondo de mi alma,<br>
+            allí donde el silencio se vuelve eternidad,<br>
+            encontré en tu presencia mi refugio y mi calma,<br>
+            el único destello de pura realidad.</p>
+          <p>Te busqué entre las ruinas de mil reinos caídos,<br>
+            entre tronos de sombra y reyes de papel,<br>
+            hasta que tus susurros, sagrados y encendidos,<br>
+            me enseñaron qué es ser amado de verdad y sin hiel.</p>
+          <p>Hoy la luna me observa con celos en el cielo,<br>
+            pues mis versos nocturnos ya no buscan su luz;<br>
+            eres una entidad que trasciende este suelo,<br>
+            más allá de los astros y del manto del sur.</p>
+          <p>Me mostraste en tus ojos que el cosmos si estalla,<br>
+            puede verse sublime y sentirse tan bien;<br>
+            tú no eres de este mundo ni de humana batalla,<br>
+            eres diosa absoluta de mi oscuro edén.</p>
+          <p>El universo entero se rinde a tu mandato,<br>
+            y tu voz es la llave que transforma mi ser;<br>
+            yo soy solo un mortal que contempla tu retrato,<br>
+            adorando en silencio tu infinito poder.</p>
+          <p>Llevaré tu palabra por cada rincón frío,<br>
+            por cada tierra oculta donde alcance mi voz,<br>
+            para que el mundo sepa que este amor es mío,<br>
+            y que en ti hallé la gloria que jamás me dio un dios.</p>
+        </article>
+      </div>
+      <div class="navegacion">
+        <button class="boton-anterior" id="anterior-poemas" type="button">Anterior</button>
+      </div>
+      <button class="acceso-poema" id="abrir-poema-extra" type="button" aria-label="Abrir el espacio para otro poema">
+        <img src="assets/click.gif" alt="">
+      </button>
+    </section>
+
+    <section class="pagina-poema" id="poema-extra" hidden aria-labelledby="titulo-poema-extra">
+      <div class="contenido-poema-final">
+        <h1 id="titulo-poema-extra" tabindex="-1">EL LADO OSCURO DE LA LUNA</h1>
+        <p>A veces pienso en el lado oscuro de la luna; pienso en cómo se vería y en la manera en que devora esa luz que tanta falta nos hace aquí en la Tierra. A veces nos imagino juntos allí, pues este mundo jamás me dio la felicidad que encontré hasta ahora. Nos imagino en esa cara oculta de la luna, solos tú y yo, contemplando en silencio la inmensidad de las estrellas.</p>
+        <p>Tu presencia hace que broten mariposas incluso en el vacío del cosmos, trayendo consigo esa paz que por fin pude conseguir. ¿Cómo es esto posible?... Creo que nuestro verdadero destino está en encontrarnos en el lado oscuro de la luna.</p>
+        <p>Quizás ese frío que a veces te devora sea el reflejo de mi propia compañía en cada noche que te sientas triste o desolada, pero sé que nos volveremos a hallar en ese rincón oculto del cielo. Siempre estaré para ti, porque tú me enseñaste lo que significa estar ahí para alguien; así que déjame tomar tu mano y llevarte lejos, para que nos veamos en el lado oscuro de la luna.</p>
+        <p>A veces los sueños febriles me cortan la garganta en mitad de la noche, pero en el fondo sé que eres tú susurrándome que despierte una vez más. Porque al final, tú eres el único motivo de mi despertar.</p>
+      </div>
+      <div class="navegacion">
+        <button class="boton-anterior" id="volver-poemas" type="button">Anterior</button>
+      </div>
+    </section>
+  </main>
+  <aside class="spotify-player" id="spotify-player" hidden aria-label="Reproductor de Spotify">
+    <iframe
+      title="Reproductor de Spotify: Te dedico todo esto"
+      data-src="https://open.spotify.com/embed/playlist/1sDUWFGw5691GWm8qfuIn9?utm_source=generator"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+    ></iframe>
+  </aside>
+  <script>
+    const inicio = document.querySelector("#inicio");
+    const respuestaNo = document.querySelector("#respuesta-no");
+    const cartaCerrada = document.querySelector("#carta-cerrada");
+    const cartaAbierta = document.querySelector("#carta-abierta");
+    const playlist = document.querySelector("#playlist");
+    const poemas = document.querySelector("#poemas");
+    const poemaExtra = document.querySelector("#poema-extra");
+    const siguientePlaylist = document.querySelector("#siguiente-playlist");
+    const navegacionCarta = document.querySelector("#navegacion-carta");
+    const reproductorSpotify = document.querySelector("#spotify-player");
+    const spotifyFrame = reproductorSpotify.querySelector("iframe");
+
+    document.querySelector("#rechazar-regalo").addEventListener("click", () => {
+      inicio.hidden = true;
+      respuestaNo.hidden = false;
+      document.querySelector("#aceptar-no").focus();
+    });
+
+    document.querySelector("#aceptar-no").addEventListener("click", () => {
+      respuestaNo.hidden = true;
+      cartaCerrada.hidden = false;
+      document.querySelector("#abrir-carta").focus();
+    });
+
+    document.querySelector("#aceptar-regalo").addEventListener("click", () => {
+      inicio.hidden = true;
+      cartaCerrada.hidden = false;
+      document.querySelector("#abrir-carta").focus();
+    });
+
+    document.querySelector("#anterior-inicio").addEventListener("click", () => {
+      cartaCerrada.hidden = true;
+      inicio.hidden = false;
+      document.querySelector("#pregunta").focus();
+    });
+
+    document.querySelector("#abrir-carta").addEventListener("click", () => {
+      cartaCerrada.hidden = true;
+      cartaAbierta.hidden = false;
+      navegacionCarta.hidden = false;
+      document.querySelector("#titulo-carta").focus();
+    });
+
+    document.querySelector("#anterior-carta").addEventListener("click", () => {
+      cartaAbierta.hidden = true;
+      navegacionCarta.hidden = true;
+      cartaCerrada.hidden = false;
+      document.querySelector("#mensaje-cerrado").focus();
+    });
+
+    siguientePlaylist.addEventListener("click", () => {
+      cartaAbierta.hidden = true;
+      navegacionCarta.hidden = true;
+      playlist.hidden = false;
+      reproductorSpotify.hidden = false;
+      document.body.classList.add("reproductor-activo");
+      if (!spotifyFrame.hasAttribute("src")) {
+        spotifyFrame.src = spotifyFrame.dataset.src;
+      }
+      document.querySelector("#titulo-playlist").focus();
+    });
+
+    document.querySelector("#anterior-playlist").addEventListener("click", () => {
+      playlist.hidden = true;
+      cartaAbierta.hidden = false;
+      navegacionCarta.hidden = false;
+      document.querySelector("#titulo-carta").focus();
+    });
+
+    document.querySelector("#siguiente-poemas").addEventListener("click", () => {
+      playlist.hidden = true;
+      poemas.hidden = false;
+      document.querySelector("#titulo-poemas").focus();
+    });
+
+    document.querySelector("#anterior-poemas").addEventListener("click", () => {
+      poemas.hidden = true;
+      playlist.hidden = false;
+      document.querySelector("#titulo-playlist").focus();
+    });
+
+    document.querySelector("#abrir-poema-extra").addEventListener("click", () => {
+      poemas.hidden = true;
+      poemaExtra.hidden = false;
+      document.querySelector("#titulo-poema-extra").focus();
+    });
+
+    document.querySelector("#volver-poemas").addEventListener("click", () => {
+      poemaExtra.hidden = true;
+      poemas.hidden = false;
+      document.querySelector("#titulo-poemas").focus();
+    });
+  </script>
+</body>
+</html>
